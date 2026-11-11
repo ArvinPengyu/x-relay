@@ -28,7 +28,9 @@ jobs:
         env:
           TARGET: ${{ inputs.url }}
           OUTNAME: ${{ inputs.out }}
-        run: node render.js
+        run: |
+          npm install playwright@1.49.0 --no-audit --no-fund --loglevel=error
+          node render.js
       - name: commit
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
