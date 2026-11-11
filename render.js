@@ -4,7 +4,10 @@ const fs = require('fs');
 (async () => {
   const target = process.env.TARGET;
   const out = process.env.OUTNAME || 'render.json';
-  const browser = await chromium.launch({ args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+  const browser = await chromium.launch({
+    headless: false,
+    args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-blink-features=AutomationControlled']
+  });
   const ctx = await browser.newContext({
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     viewport: { width: 1280, height: 900 }
@@ -20,9 +23,10 @@ const fs = require('fs');
       if (n > 3) break;
     }
     // 多滚几次，便于翻页
-    for (let i = 0; i < 3; i++) {
-      await page.mouse.wheel(0, 4000);
-      await page.waitForTimeout(1500);
+    const scrolls = Number(process.env.SCROLLS || 3);
+    for (let i = 0; i < scrolls; i++) {
+      await page.mouse.wheel(0, 5000);
+      await page.waitForTimeout(1800);
     }
   } catch (e) {
     err = String(e.message || e).slice(0, 200);
