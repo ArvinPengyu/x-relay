@@ -9,13 +9,17 @@ on:
       out:
         description: 'output file name'
         required: true
+      os:
+        description: 'runner os'
+        required: false
+        default: 'ubuntu-latest'
 
 permissions:
   contents: write
 
 jobs:
   relay:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
     steps:
       - uses: actions/checkout@v4
       - name: fetch
