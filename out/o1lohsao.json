@@ -1,1 +1,1 @@
-{"status": 0, "ts": 1794378134, "error": "HTTP Error 429: Too Many Requests"}
+{"status": 0, "ts": 1794378189, "try": 3, "error": "HTTP Error 429: Too Many Requests"}
