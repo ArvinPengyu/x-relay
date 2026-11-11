@@ -1,0 +1,63 @@
+[
+ {
+  "name": "syndication",
+  "url": "https://syndication.twitter.com/srv/timeline-profile/screen-name/SiferTimya",
+  "status": 0,
+  "error": "HTTP Error 429: Too Many Requests",
+  "ms": 62
+ },
+ {
+  "name": "nitter-netbub",
+  "url": "https://nitter.netbub.com/SiferTimya/rss",
+  "status": 200,
+  "len": 14233,
+  "ids": 0,
+  "links": 20,
+  "hasuser": 49,
+  "ms": 647
+ },
+ {
+  "name": "nitter-mizuki",
+  "url": "https://nitter.mizuki.st/SiferTimya/rss",
+  "status": 0,
+  "error": "<urlopen error [Errno 101] Network is unreachable>",
+  "ms": 241
+ },
+ {
+  "name": "nitter-tiekoetter",
+  "url": "https://nitter.tiekoetter.com/SiferTimya/rss",
+  "status": 200,
+  "len": 7557,
+  "ids": 0,
+  "links": 0,
+  "hasuser": 0,
+  "ms": 912
+ },
+ {
+  "name": "jina-x",
+  "url": "https://r.jina.ai/https://x.com/SiferTimya",
+  "status": 0,
+  "error": "HTTP Error 403: Forbidden",
+  "ms": 169
+ },
+ {
+  "name": "fxtwitter-user",
+  "url": "https://api.fxtwitter.com/SiferTimya",
+  "status": 200,
+  "len": 1114,
+  "ids": 0,
+  "links": 0,
+  "hasuser": 2,
+  "ms": 206
+ },
+ {
+  "name": "brave",
+  "url": "https://search.brave.com/search?q=site%3Ax.com%20SiferTimya",
+  "status": 200,
+  "len": 190690,
+  "ids": 0,
+  "links": 1,
+  "hasuser": 32,
+  "ms": 179
+ }
+]
