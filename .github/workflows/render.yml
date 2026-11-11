@@ -9,6 +9,10 @@ on:
       out:
         description: 'output file'
         required: true
+      scrolls:
+        description: 'scroll count'
+        required: false
+        default: '3'
 
 concurrency:
   group: render
@@ -28,15 +32,17 @@ jobs:
         env:
           TARGET: ${{ inputs.url }}
           OUTNAME: ${{ inputs.out }}
+          SCROLLS: ${{ inputs.scrolls }}
         run: |
           npm install playwright@1.49.0 --no-audit --no-fund --loglevel=error
-          node render.js
+          xvfb-run -a node render.js
       - name: commit
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config user.name relay-bot
           git config user.email relay@users.noreply.github.com
-          git add -A out
+          printf 'node_modules/\n' > .gitignore
+          git add -A out .gitignore
           git commit -m "render" || echo "no change"
-          git pull --rebase origin main || true
+          git -c rebase.autoStash=true pull --rebase origin main || true
           git push
