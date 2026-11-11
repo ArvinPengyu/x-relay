@@ -10,10 +10,6 @@ on:
         description: 'output file name'
         required: true
 
-concurrency:
-  group: relay
-  cancel-in-progress: false
-
 permissions:
   contents: write
 
@@ -37,13 +33,21 @@ jobs:
               'accept': 'text/html,application/json,*/*',
               'accept-language': 'en-US,en;q=0.9',
           })
-          try:
-              with urllib.request.urlopen(req, timeout=40) as r:
-                  body = r.read()
-                  data = {'status': r.status, 'ts': int(__import__('time').time()),
-                          'ctype': r.headers.get('content-type', ''), 'b64': base64.b64encode(body).decode()}
-          except Exception as e:
-              data = {'status': 0, 'ts': int(__import__('time').time()), 'error': str(e)[:200]}
+          import time
+          data = None
+          for attempt in range(3):
+              try:
+                  with urllib.request.urlopen(req, timeout=40) as r:
+                      body = r.read()
+                      data = {'status': r.status, 'ts': int(time.time()), 'try': attempt + 1,
+                              'ctype': r.headers.get('content-type', ''), 'b64': base64.b64encode(body).decode()}
+                      break
+              except Exception as e:
+                  data = {'status': 0, 'ts': int(time.time()), 'try': attempt + 1, 'error': str(e)[:200]}
+                  if '429' in str(e) or '503' in str(e):
+                      time.sleep(4 + attempt * 6)
+                  else:
+                      break
           with open('out/' + out, 'w') as f:
               json.dump(data, f)
           print('done', data.get('status'), len(data.get('b64', '')))
@@ -54,5 +58,4 @@ jobs:
           git config user.email relay@users.noreply.github.com
           git add -A out
           git commit -m "relay: ${{ inputs.out }}" || echo "no change"
-          git pull --rebase origin main || true
           git push
