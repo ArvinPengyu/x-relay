@@ -1,0 +1,49 @@
+name: media
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'media url'
+        required: true
+      name:
+        description: 'file name'
+        required: true
+
+concurrency:
+  group: media
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download
+        env:
+          SRC: ${{ inputs.url }}
+          NAME: ${{ inputs.name }}
+        run: |
+          mkdir -p media
+          python3 - <<'PY'
+          import os, urllib.request
+          src = os.environ['SRC']; name = os.environ['NAME']
+          req = urllib.request.Request(src, headers={
+              'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36',
+              'referer': 'https://x.com/', 'accept': '*/*'})
+          with urllib.request.urlopen(req, timeout=180) as r:
+              data = r.read()
+          open('media/' + name, 'wb').write(data)
+          print('saved', len(data), 'bytes ->', name)
+          PY
+      - name: commit
+        run: |
+          git config user.name relay-bot
+          git config user.email relay@users.noreply.github.com
+          git add -A media
+          git commit -m "media: ${{ inputs.name }}" || echo "no change"
+          git pull --rebase origin main || true
+          git push
